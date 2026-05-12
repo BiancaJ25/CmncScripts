@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] HudManager hudManager;
     private Rigidbody playerRb;
     [SerializeField] float jumpForce = 10;
     [SerializeField] float gravityModifier;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifier;
         playerAnim = GetComponent<Animator>();
         currentLifes = maxLifes;
+        hudManager.updateLifes(currentLifes);
     }
 
     // Update is called once per frame
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
         } else if (collision.gameObject.CompareTag("Obstacle"))
         {
             currentLifes--;
+            hudManager.updateLifes(currentLifes);
             if (currentLifes == 0)
             {
                 processGameOver();
