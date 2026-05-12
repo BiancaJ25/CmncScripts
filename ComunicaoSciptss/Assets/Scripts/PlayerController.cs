@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnim;
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
+    public int currentLifes;
+    [SerializeField] int maxLifes;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityModifier;
         playerAnim = GetComponent<Animator>();
+        currentLifes = maxLifes;
     }
 
     // Update is called once per frame
@@ -41,13 +44,22 @@ public class PlayerController : MonoBehaviour
             dirtParticle.Play();
         } else if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("Game Over");
-            gameOver = true;
-            playerAnim.SetInteger("DeathType_int", 1);
-            playerAnim.SetBool("Death_b", true);
-            dirtParticle.Stop();
-            explosionParticle.Play();
+            currentLifes--;
+            if (currentLifes == 0)
+            {
+                processGameOver();
+            }
         }     
+    }
+
+    private void processGameOver()
+    {
+        Debug.Log("Game Over");
+        gameOver = true;
+        playerAnim.SetInteger("DeathType_int", 1);
+        playerAnim.SetBool("Death_b", true);
+        dirtParticle.Stop();
+        explosionParticle.Play();
     }
 
     public bool IsGameOver()
